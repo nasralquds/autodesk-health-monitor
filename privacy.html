@@ -4,12 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Privacy Policy – Autodesk Health Monitor</title>
-    <meta name="description" content="Privacy Policy for Autodesk Health Monitor by Nour Engineering Solutions">
+    <meta name="description" content="Privacy Policy for Autodesk Health Monitor by Nasr Alshazly">
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg-primary: #0a0e1a;
-            --bg-secondary: #111827;
             --bg-card: #1a2035;
             --accent-blue: #3b82f6;
             --accent-cyan: #06b6d4;
@@ -18,178 +17,44 @@
             --text-muted: #64748b;
             --border: rgba(255,255,255,0.06);
         }
-
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html { scroll-behavior: smooth; }
-
-        body {
-            font-family: 'DM Sans', -apple-system, sans-serif;
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            line-height: 1.8;
-        }
-
+        body { font-family: 'DM Sans', -apple-system, sans-serif; background: var(--bg-primary); color: var(--text-primary); line-height: 1.8; }
         nav {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            z-index: 100;
-            padding: 1rem 2rem;
-            backdrop-filter: blur(20px);
-            background: rgba(10,14,26,0.8);
+            position: fixed; top: 0; width: 100%; z-index: 100; padding: 1rem 2rem;
+            backdrop-filter: blur(20px); background: rgba(10,14,26,0.8);
             border-bottom: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
+            display: flex; align-items: center; justify-content: space-between;
         }
-
-        .nav-brand {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            text-decoration: none;
-        }
-
-        .nav-brand .shield {
-            width: 36px;
-            height: 36px;
-            background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan));
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.1rem;
-        }
-
-        .nav-brand span {
-            font-weight: 700;
-            font-size: 1.1rem;
-            color: var(--text-primary);
-        }
-
-        .nav-links a {
-            color: var(--text-secondary);
-            text-decoration: none;
-            font-size: 0.9rem;
-            font-weight: 500;
-            margin-left: 1.5rem;
-            transition: color 0.3s;
-        }
-
+        .nav-brand { display: flex; align-items: center; gap: 0.75rem; text-decoration: none; }
+        .nav-brand .shield { width: 36px; height: 36px; background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan)); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; }
+        .nav-brand span { font-weight: 700; font-size: 1.1rem; color: var(--text-primary); }
+        .nav-links a { color: var(--text-secondary); text-decoration: none; font-size: 0.9rem; font-weight: 500; margin-left: 1.5rem; transition: color 0.3s; }
         .nav-links a:hover { color: var(--text-primary); }
-
-        .content {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 8rem 2rem 4rem;
-        }
-
-        .content h1 {
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-        }
-
-        .effective-date {
-            color: var(--text-muted);
-            font-size: 0.9rem;
-            margin-bottom: 3rem;
-            padding-bottom: 2rem;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .content h2 {
-            font-size: 1.4rem;
-            font-weight: 700;
-            margin-top: 2.5rem;
-            margin-bottom: 1rem;
-            color: var(--accent-cyan);
-        }
-
-        .content h3 {
-            font-size: 1.1rem;
-            font-weight: 600;
-            margin-top: 1.5rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .content p {
-            color: var(--text-secondary);
-            margin-bottom: 1rem;
-            font-size: 1rem;
-        }
-
-        .content ul {
-            color: var(--text-secondary);
-            margin: 0.5rem 0 1.5rem 1.5rem;
-        }
-
-        .content ul li {
-            margin-bottom: 0.5rem;
-            font-size: 0.95rem;
-        }
-
-        .content a {
-            color: var(--accent-blue);
-            text-decoration: none;
-        }
-
+        .content { max-width: 800px; margin: 0 auto; padding: 8rem 2rem 4rem; }
+        .content h1 { font-size: 2.5rem; font-weight: 700; margin-bottom: 0.5rem; }
+        .effective-date { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 3rem; padding-bottom: 2rem; border-bottom: 1px solid var(--border); }
+        .content h2 { font-size: 1.4rem; font-weight: 700; margin-top: 2.5rem; margin-bottom: 1rem; color: var(--accent-cyan); }
+        .content h3 { font-size: 1.1rem; font-weight: 600; margin-top: 1.5rem; margin-bottom: 0.5rem; }
+        .content p { color: var(--text-secondary); margin-bottom: 1rem; font-size: 1rem; }
+        .content ul { color: var(--text-secondary); margin: 0.5rem 0 1.5rem 1.5rem; }
+        .content ul li { margin-bottom: 0.5rem; font-size: 0.95rem; }
+        .content a { color: var(--accent-blue); text-decoration: none; }
         .content a:hover { text-decoration: underline; }
-
-        .highlight-box {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-left: 4px solid var(--accent-cyan);
-            border-radius: 8px;
-            padding: 1.25rem 1.5rem;
-            margin: 1.5rem 0;
-        }
-
-        .highlight-box p {
-            color: var(--text-primary);
-            margin: 0;
-            font-weight: 500;
-        }
-
-        footer {
-            border-top: 1px solid var(--border);
-            padding: 2rem;
-            text-align: center;
-            margin-top: 4rem;
-        }
-
-        .footer-links {
-            display: flex;
-            justify-content: center;
-            gap: 2rem;
-            margin-bottom: 1rem;
-            flex-wrap: wrap;
-        }
-
-        .footer-links a {
-            color: var(--text-secondary);
-            text-decoration: none;
-            font-size: 0.9rem;
-        }
-
-        .footer-copy {
-            color: var(--text-muted);
-            font-size: 0.85rem;
-        }
-
-        @media (max-width: 768px) {
-            .content { padding: 6rem 1.5rem 3rem; }
-            .content h1 { font-size: 1.8rem; }
-            .nav-links { display: none; }
-        }
+        .highlight-box { background: var(--bg-card); border: 1px solid var(--border); border-left: 4px solid var(--accent-cyan); border-radius: 8px; padding: 1.25rem 1.5rem; margin: 1.5rem 0; }
+        .highlight-box p { color: var(--text-primary); margin: 0; font-weight: 500; }
+        footer { border-top: 1px solid var(--border); padding: 2rem; text-align: center; margin-top: 4rem; }
+        .footer-links { display: flex; justify-content: center; gap: 2rem; margin-bottom: 1rem; flex-wrap: wrap; }
+        .footer-links a { color: var(--text-secondary); text-decoration: none; font-size: 0.9rem; }
+        .footer-copy { color: var(--text-muted); font-size: 0.85rem; }
+        @media (max-width: 768px) { .content { padding: 6rem 1.5rem 3rem; } .content h1 { font-size: 1.8rem; } .nav-links { display: none; } }
     </style>
 </head>
 <body>
 
 <nav>
     <a href="index.html" class="nav-brand">
-        <div class="shield">🛡️</div>
-        <span>AHM</span>
+        <img src="logo.png" alt="Autodesk Health Monitor" style="height:36px;">
     </a>
     <div class="nav-links">
         <a href="index.html">Home</a>
@@ -203,7 +68,7 @@
     <h1>Privacy Policy</h1>
     <p class="effective-date">Effective Date: February 22, 2026 &nbsp;|&nbsp; Last Updated: February 22, 2026</p>
 
-    <p>Nasr Alshazly ("we", "us", "our") operates the <strong>Autodesk Health Monitor</strong> application ("the App"). This Privacy Policy describes how we collect, use, and protect your information when you use our App.</p>
+    <p>Nasr Alshazly ("we", "us", "our") develops and publishes the <strong>Autodesk Health Monitor</strong> application ("the App"). This Privacy Policy describes how we collect, use, and protect your information when you use our App.</p>
 
     <div class="highlight-box">
         <p>🛡️ Autodesk Health Monitor is designed with privacy in mind. We do NOT collect, transmit, or store any personal data on external servers.</p>
@@ -287,8 +152,8 @@
     <p>If you have any questions or concerns about this Privacy Policy, please contact us:</p>
     <ul>
         <li><strong>Developer:</strong> Nasr Alshazly</li>
-        <li><strong>Email:</strong> <a href="mailto:nasralquds@gmail.com">support@nour-eng.com</a></li>
-        <li><strong>Website:</strong> <a href="https://www.nasralquds.github.io/autodesk-health-monitor">www.nasralquds.github.io/autodesk-health-monitor.com</a></li>
+        <li><strong>Email:</strong> <a href="/cdn-cgi/l/email-protection#a0cec1d3d2c1ccd1d5c4d3e0c7cdc1c9cc8ec3cfcd"><span class="__cf_email__" data-cfemail="1779766465767b6662736457707a767e7b3974787a">[email&#160;protected]</span></a></li>
+        <li><strong>Website:</strong> <a href="https://nasralquds.github.io/autodesk-health-monitor/">nasralquds.github.io/autodesk-health-monitor</a></li>
     </ul>
 
 </div>
@@ -297,10 +162,4 @@
     <div class="footer-links">
         <a href="index.html">Home</a>
         <a href="privacy.html">Privacy Policy</a>
-        <a href="mailto:nasralquds@gmail.com">Contact</a>
-    </div>
-    <p class="footer-copy">© 2026 Nasr Alshazly. All rights reserved.</p>
-</footer>
-
-</body>
-</html>
+        <a href="/cdn-cgi/l/email-
