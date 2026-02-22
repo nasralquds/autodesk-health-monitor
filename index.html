@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Autodesk Health Monitor – Smart Diagnostic Tool for Autodesk Products</title>
+    <meta name="description" content="Advanced diagnostic tool that scans your system and detects problems in AutoCAD, Revit, Inventor, Civil 3D and more before they impact your workflow.">
+    <meta name="keywords" content="Autodesk, AutoCAD, Revit, Inventor, diagnostic, health monitor, system check, CAD, BIM">
+    <meta name="author" content="Nour Engineering Solutions">
+    <link rel="icon" type="image/png" href="assets/favicon.png">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0e1a;
+            --bg-secondary: #111827;
+            --bg-card: #1a2035;
+            --accent-blue: #3b82f6;
+            --accent-cyan: #06b6d4;
+            --accent-green: #10b981;
+            --accent-orange: #f59e0b;
+            --accent-red: #ef4444;
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --border: rgba(255,255,255,0.06);
+            --glow-blue: rgba(59,130,246,0.15);
+            --glow-cyan: rgba(6,182,212,0.1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'DM Sans', -apple-system, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        /* === NOISE OVERLAY === */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* === NAV === */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 100;
+            padding: 1rem 2rem;
+            backdrop-filter: blur(20px);
+            background: rgba(10,14,26,0.8);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+        }
+
+        .nav-brand .shield {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan));
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+        }
+
+        .nav-brand span {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--text-primary);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover { color: var(--text-primary); }
+
+        .nav-cta {
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan)) !important;
+            color: white !important;
+            padding: 0.5rem 1.25rem;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: transform 0.2s, box-shadow 0.3s;
+        }
+
+        .nav-cta:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 20px var(--glow-blue);
+        }
+
+        /* === HERO === */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 8rem 2rem 4rem;
+            position: relative;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -20%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 800px;
+            height: 800px;
+            background: radial-gradient(circle, var(--glow-blue) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(59,130,246,0.1);
+            border: 1px solid rgba(59,130,246,0.2);
+            padding: 0.4rem 1rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            color: var(--accent-cyan);
+            margin-bottom: 2rem;
+            animation: fadeUp 0.8s ease;
+        }
+
+        .hero h1 {
+            font-family: 'DM Sans', sans-serif;
+            font-size: clamp(2.5rem, 6vw, 4.5rem);
+            font-weight: 700;
+            line-height: 1.15;
+            margin-bottom: 1.5rem;
+            animation: fadeUp 0.8s ease 0.1s both;
+        }
+
+        .hero h1 .gradient {
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan), var(--accent-green));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto 2.5rem;
+            animation: fadeUp 0.8s ease 0.2s both;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            animation: fadeUp 0.8s ease 0.3s both;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan));
+            color: white;
+            padding: 0.85rem 2rem;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: transform 0.2s, box-shadow 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px var(--glow-blue);
+        }
+
+        .btn-secondary {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            padding: 0.85rem 2rem;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: background 0.3s, border-color 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255,255,255,0.08);
+            border-color: rgba(255,255,255,0.15);
+        }
+
+        /* === PRODUCTS BAR === */
+        .products-bar {
+            padding: 2rem 0;
+            text-align: center;
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+            animation: fadeUp 0.8s ease 0.4s both;
+        }
+
+        .products-bar p {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 1.25rem;
+        }
+
+        .product-logos {
+            display: flex;
+            justify-content: center;
+            gap: 2.5rem;
+            flex-wrap: wrap;
+            padding: 0 2rem;
+        }
+
+        .product-logos span {
+            color: var(--text-secondary);
+            font-weight: 600;
+            font-size: 0.95rem;
+            opacity: 0.7;
+            transition: opacity 0.3s;
+        }
+
+        .product-logos span:hover { opacity: 1; }
+
+        /* === SECTIONS === */
+        section {
+            padding: 6rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-label {
+            color: var(--accent-cyan);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .section-header h2 {
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .section-header p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* === FEATURES GRID === */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .feature-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2rem;
+            transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-blue), var(--accent-cyan));
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(59,130,246,0.2);
+            box-shadow: 0 8px 40px rgba(0,0,0,0.3);
+        }
+
+        .feature-card:hover::before { opacity: 1; }
+
+        .feature-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .feature-card h3 {
+            font-size: 1.15rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .feature-card p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        /* === HEALTH SCORE DEMO === */
+        .score-section {
+            text-align: center;
+            padding: 6rem 2rem;
+        }
+
+        .score-demo {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            flex-wrap: wrap;
+            margin-top: 3rem;
+        }
+
+        .score-circle {
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .score-circle::before {
+            content: '';
+            position: absolute;
+            inset: -3px;
+            border-radius: 50%;
+            padding: 3px;
+        }
+
+        .score-good {
+            background: var(--bg-card);
+            border: 3px solid var(--accent-green);
+            box-shadow: 0 0 40px rgba(16,185,129,0.15);
+        }
+
+        .score-warn {
+            background: var(--bg-card);
+            border: 3px solid var(--accent-orange);
+            box-shadow: 0 0 40px rgba(245,158,11,0.15);
+        }
+
+        .score-critical {
+            background: var(--bg-card);
+            border: 3px solid var(--accent-red);
+            box-shadow: 0 0 40px rgba(239,68,68,0.15);
+        }
+
+        .score-number {
+            font-size: 2.8rem;
+            font-weight: 700;
+        }
+
+        .score-good .score-number { color: var(--accent-green); }
+        .score-warn .score-number { color: var(--accent-orange); }
+        .score-critical .score-number { color: var(--accent-red); }
+
+        .score-label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 0.25rem;
+        }
+
+        .score-desc {
+            margin-top: 0.75rem;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        /* === CHECKS LIST === */
+        .checks-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 0.75rem;
+            margin-top: 3rem;
+        }
+
+        .check-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem 1.25rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            font-size: 0.95rem;
+            transition: border-color 0.3s;
+        }
+
+        .check-item:hover {
+            border-color: rgba(59,130,246,0.2);
+        }
+
+        .check-icon {
+            flex-shrink: 0;
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            background: rgba(16,185,129,0.1);
+            color: var(--accent-green);
+        }
+
+        /* === LANGUAGES === */
+        .lang-flags {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+            margin-top: 3rem;
+        }
+
+        .lang-item {
+            text-align: center;
+            padding: 1.5rem 2rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            transition: transform 0.3s, border-color 0.3s;
+            min-width: 120px;
+        }
+
+        .lang-item:hover {
+            transform: translateY(-3px);
+            border-color: rgba(59,130,246,0.2);
+        }
+
+        .lang-item .flag {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .lang-item .name {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        /* === FORMATS === */
+        .formats-row {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+            margin-top: 3rem;
+        }
+
+        .format-badge {
+            padding: 0.75rem 1.5rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* === REQUIREMENTS === */
+        .req-cards {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+            margin-top: 3rem;
+        }
+
+        .req-card {
+            padding: 1.5rem 2rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            text-align: center;
+            min-width: 200px;
+        }
+
+        .req-card .icon { font-size: 2rem; margin-bottom: 0.75rem; }
+        .req-card h4 { margin-bottom: 0.3rem; }
+        .req-card p { color: var(--text-secondary); font-size: 0.9rem; }
+
+        /* === CTA === */
+        .cta-section {
+            text-align: center;
+            padding: 6rem 2rem;
+            position: relative;
+        }
+
+        .cta-section::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 600px;
+            height: 400px;
+            background: radial-gradient(circle, var(--glow-cyan) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .cta-section h2 {
+            font-size: clamp(2rem, 4vw, 3rem);
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .cta-section p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .cta-section .btn-primary {
+            position: relative;
+            z-index: 2;
+            font-size: 1.1rem;
+            padding: 1rem 2.5rem;
+        }
+
+        /* === FOOTER === */
+        footer {
+            border-top: 1px solid var(--border);
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover { color: var(--text-primary); }
+
+        .footer-copy {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        /* === ANIMATIONS === */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* === RESPONSIVE === */
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .features-grid { grid-template-columns: 1fr; }
+            .score-demo { gap: 1.5rem; }
+            .score-circle { width: 130px; height: 130px; }
+            .score-number { font-size: 2.2rem; }
+            section { padding: 4rem 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+    <a href="#" class="nav-brand">
+        <div class="shield">🛡️</div>
+        <span>AHM</span>
+    </a>
+    <div class="nav-links">
+        <a href="#features">Features</a>
+        <a href="#checks">System Checks</a>
+        <a href="#languages">Languages</a>
+        <a href="#download">Download</a>
+        <a href="privacy.html">Privacy</a>
+        <a href="#download" class="nav-cta">Get Free →</a>
+    </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+    <div class="hero-content">
+        <div class="hero-badge">🔍 v1.0 — Free Diagnostic Tool</div>
+        <h1>
+            <span class="gradient">Monitor. Diagnose.<br>Protect.</span><br>
+            Your Autodesk Products
+        </h1>
+        <p>Advanced diagnostic tool that scans your system, analyzes log files, and detects problems in AutoCAD, Revit, Inventor &amp; more — before they impact your workflow.</p>
+        <div class="hero-actions">
+            <a href="#download" class="btn-primary">⬇ Download Free</a>
+            <a href="#features" class="btn-secondary">Learn More</a>
+        </div>
+    </div>
+</section>
+
+<!-- PRODUCTS BAR -->
+<div class="products-bar">
+    <p>Supports all major Autodesk products</p>
+    <div class="product-logos">
+        <span>AutoCAD</span>
+        <span>Revit</span>
+        <span>Inventor</span>
+        <span>Civil 3D</span>
+        <span>3ds Max</span>
+        <span>Maya</span>
+        <span>Navisworks</span>
+        <span>Fusion</span>
+    </div>
+</div>
+
+<!-- FEATURES -->
+<section id="features">
+    <div class="section-header">
+        <span class="section-label">Features</span>
+        <h2>Everything you need to keep your tools healthy</h2>
+        <p>Comprehensive diagnostics with actionable recommendations</p>
+    </div>
+    <div class="features-grid">
+        <div class="feature-card">
+            <div class="feature-icon" style="background:rgba(59,130,246,0.1);color:var(--accent-blue)">🔎</div>
+            <h3>Auto Product Detection</h3>
+            <p>Automatically discovers all installed Autodesk products with version info and installation paths.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon" style="background:rgba(239,68,68,0.1);color:var(--accent-red)">📋</div>
+            <h3>Intelligent Log Analysis</h3>
+            <p>Parses crash logs, error files, and journals to detect patterns and identify root causes.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon" style="background:rgba(16,185,129,0.1);color:var(--accent-green)">💻</div>
+            <h3>14 System Checks</h3>
+            <p>Comprehensive environment scan including RAM, GPU, DPI, drivers, .NET, Windows updates, and more.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon" style="background:rgba(245,158,11,0.1);color:var(--accent-orange)">📊</div>
+            <h3>Health Score (0–100)</h3>
+            <p>Clear numeric score to quickly assess your system's condition — from healthy to emergency state.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon" style="background:rgba(6,182,212,0.1);color:var(--accent-cyan)">🔧</div>
+            <h3>Actionable Recommendations</h3>
+            <p>Step-by-step fix instructions with confidence scores and priority levels for each issue.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon" style="background:rgba(139,92,246,0.1);color:#8b5cf6">📄</div>
+            <h3>Professional Reports</h3>
+            <p>Export detailed reports in 5 formats: PDF, HTML, Excel, JSON, and TXT.</p>
+        </div>
+    </div>
+</section>
+
+<!-- HEALTH SCORE -->
+<section class="score-section">
+    <div class="section-header">
+        <span class="section-label">Health Score</span>
+        <h2>Know your system's health at a glance</h2>
+        <p>Instant assessment from 0 (critical) to 100 (perfect)</p>
+    </div>
+    <div class="score-demo">
+        <div>
+            <div class="score-circle score-good">
+                <span class="score-number">82</span>
+                <span class="score-label">Good</span>
+            </div>
+            <p class="score-desc">System is healthy</p>
+        </div>
+        <div>
+            <div class="score-circle score-warn">
+                <span class="score-number">47</span>
+                <span class="score-label">Warning</span>
+            </div>
+            <p class="score-desc">Issues detected</p>
+        </div>
+        <div>
+            <div class="score-circle score-critical">
+                <span class="score-number">17</span>
+                <span class="score-label">Emergency</span>
+            </div>
+            <p class="score-desc">Critical problems</p>
+        </div>
+    </div>
+</section>
+
+<!-- 14 CHECKS -->
+<section id="checks">
+    <div class="section-header">
+        <span class="section-label">System Checks</span>
+        <h2>14 comprehensive diagnostic checks</h2>
+    </div>
+    <div class="checks-grid">
+        <div class="check-item"><div class="check-icon">✓</div> Available RAM</div>
+        <div class="check-item"><div class="check-icon">✓</div> Disk Space</div>
+        <div class="check-item"><div class="check-icon">✓</div> DPI Scaling</div>
+        <div class="check-item"><div class="check-icon">✓</div> GPU TDR Settings</div>
+        <div class="check-item"><div class="check-icon">✓</div> .NET Framework</div>
+        <div class="check-item"><div class="check-icon">✓</div> UAC Level</div>
+        <div class="check-item"><div class="check-icon">✓</div> Windows Updates</div>
+        <div class="check-item"><div class="check-icon">✓</div> Temp Folder Size</div>
+        <div class="check-item"><div class="check-icon">✓</div> Page File / Virtual Memory</div>
+        <div class="check-item"><div class="check-icon">✓</div> GPU Driver</div>
+        <div class="check-item"><div class="check-icon">✓</div> System Uptime</div>
+        <div class="check-item"><div class="check-icon">✓</div> Installation Integrity</div>
+        <div class="check-item"><div class="check-icon">✓</div> User Profile Size</div>
+        <div class="check-item"><div class="check-icon">✓</div> Log File Analysis</div>
+    </div>
+</section>
+
+<!-- LANGUAGES -->
+<section id="languages">
+    <div class="section-header">
+        <span class="section-label">Multilingual</span>
+        <h2>Available in 5 languages</h2>
+        <p>Full RTL support for Arabic</p>
+    </div>
+    <div class="lang-flags">
+        <div class="lang-item"><div class="flag">🇸🇦</div><div class="name">العربية</div></div>
+        <div class="lang-item"><div class="flag">🇬🇧</div><div class="name">English</div></div>
+        <div class="lang-item"><div class="flag">🇩🇪</div><div class="name">Deutsch</div></div>
+        <div class="lang-item"><div class="flag">🇪🇸</div><div class="name">Español</div></div>
+        <div class="lang-item"><div class="flag">🇯🇵</div><div class="name">日本語</div></div>
+    </div>
+</section>
+
+<!-- EXPORT FORMATS -->
+<section>
+    <div class="section-header">
+        <span class="section-label">Export</span>
+        <h2>Professional reports in 5 formats</h2>
+    </div>
+    <div class="formats-row">
+        <div class="format-badge">📕 PDF</div>
+        <div class="format-badge">🌐 HTML</div>
+        <div class="format-badge">📊 Excel</div>
+        <div class="format-badge">📋 JSON</div>
+        <div class="format-badge">📝 TXT</div>
+    </div>
+</section>
+
+<!-- REQUIREMENTS -->
+<section>
+    <div class="section-header">
+        <span class="section-label">Requirements</span>
+        <h2>System requirements</h2>
+    </div>
+    <div class="req-cards">
+        <div class="req-card">
+            <div class="icon">💻</div>
+            <h4>Windows 10/11</h4>
+            <p>64-bit</p>
+        </div>
+        <div class="req-card">
+            <div class="icon">⚙️</div>
+            <h4>.NET 8 Runtime</h4>
+            <p>Desktop Runtime</p>
+        </div>
+        <div class="req-card">
+            <div class="icon">🏗️</div>
+            <h4>Any Autodesk Product</h4>
+            <p>Or use Demo Mode</p>
+        </div>
+    </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section" id="download">
+    <h2>Ready to protect your Autodesk workflow?</h2>
+    <p>Download free from the Autodesk App Store</p>
+    <a href="https://apps.autodesk.com" class="btn-primary">⬇ Download from Autodesk App Store</a>
+</section>
+
+<!-- FOOTER -->
+<footer>
+    <div class="footer-links">
+        <a href="privacy.html">Privacy Policy</a>
+        <a href="mailto:support@nour-eng.com">Support</a>
+        <a href="https://apps.autodesk.com">Autodesk App Store</a>
+    </div>
+    <p class="footer-copy">© 2026 Nour Engineering Solutions. All rights reserved.<br>
+    This is an independent tool and is not affiliated with or endorsed by Autodesk, Inc.</p>
+</footer>
+
+</body>
+</html>
